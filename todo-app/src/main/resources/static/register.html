@@ -1,0 +1,20 @@
+<div class="container">
+    <form ng-submit="register(user)">
+        <div class="form-group">
+            <label for="name">Name (required):</label>
+            <input type="text" class="form-control" id="name" ng-model="user.name" required="true">
+        </div>
+
+        <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" class="form-control" id="surname" ng-model="user.surname">
+        </div>
+
+        <div class="form-group">
+            <label for="mail">Mail (required):</label>
+            <input type="email" class="form-control" id="mail" ng-model="user.mail" required="true">
+        </div>
+
+        <button type="submit" class="btn btn-danger">Register</button>
+    </form>
+</div>

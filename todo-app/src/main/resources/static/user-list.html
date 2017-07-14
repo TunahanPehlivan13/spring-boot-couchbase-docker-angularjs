@@ -1,0 +1,25 @@
+<div class="container">
+    <h4>
+        &nbsp;<a href="#register">Go to Register</a>
+    </h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Mail</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="user in users">
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.surname}}</td>
+            <td>{{user.mail}}</td>
+            <td>
+                <a href="#/todo-list/{{user.id}}">See to-do list</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

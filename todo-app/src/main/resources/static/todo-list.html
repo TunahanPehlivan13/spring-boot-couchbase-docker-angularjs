@@ -1,0 +1,16 @@
+<div class="container">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Priority</th>
+            <th>Note</th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="todo in todoList">
+        <tr>
+            <td>{{todo.priority}}</td>
+            <td>{{todo.note}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
