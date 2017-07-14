@@ -37,6 +37,8 @@ public class TodoControllerTest extends BaseControllerTest {
     @Before
     public void setup() {
         super.setup();
+        todoRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -103,22 +105,13 @@ public class TodoControllerTest extends BaseControllerTest {
                 .userId(user.getId())
                 .build();
 
-        Todo todo2 = new Todo.Builder()
-                .note("note2")
-                .priority(Priority.LOW)
-                .userId(user.getId())
-                .build();
-
-        todoRepository.save(Arrays.asList(todo1, todo2));
+        todoRepository.save(Arrays.asList(todo1));
 
         mockMvc.perform(get("/todo").param("userId", user.getId()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].note", equalTo("note2")))
-                .andExpect(jsonPath("$[0].priority", equalTo("LOW")))
-                .andExpect(jsonPath("$[0].userId", equalTo(user.getId())))
-                .andExpect(jsonPath("$[1].note", equalTo("note1")))
-                .andExpect(jsonPath("$[1].priority", equalTo("HIGH")))
-                .andExpect(jsonPath("$[1].userId", equalTo(user.getId())));
+                .andExpect(jsonPath("$[0].note", equalTo("note1")))
+                .andExpect(jsonPath("$[0].priority", equalTo("HIGH")))
+                .andExpect(jsonPath("$[0].userId", equalTo(user.getId())));
     }
 
     @After

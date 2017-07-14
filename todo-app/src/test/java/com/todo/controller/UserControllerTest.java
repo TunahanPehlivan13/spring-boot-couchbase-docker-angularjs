@@ -1,9 +1,7 @@
 package com.todo.controller;
 
 import com.todo.Application;
-import com.todo.entity.Todo;
 import com.todo.entity.User;
-import com.todo.entity.enums.Priority;
 import com.todo.repository.UserRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -34,6 +31,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Before
     public void setup() {
         super.setup();
+        userRepository.deleteAll();
     }
 
     @Test
