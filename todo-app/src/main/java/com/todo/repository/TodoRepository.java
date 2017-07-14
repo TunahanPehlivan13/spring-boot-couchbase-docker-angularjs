@@ -10,6 +10,6 @@ import java.util.List;
 @ViewIndexed(designDoc = "todo", viewName = "all")
 public interface TodoRepository extends CouchbaseRepository<Todo, String> {
 
-    @View(designDocument="todo", viewName="byUserId")
+    @View
     List<Todo> findByUserId(String userId);
 }
