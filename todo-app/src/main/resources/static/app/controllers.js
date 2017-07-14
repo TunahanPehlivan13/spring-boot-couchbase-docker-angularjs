@@ -17,8 +17,10 @@
         };
     };
 
-    var TodoListController = function ($scope, TodoListFactory, $routeParams, $location) {
+    var TodoListController = function ($scope, TodoListFactory, $routeParams, $location, $modal) {
         var userId = $routeParams.userId;
+        $scope.todo = {userId: userId, priority: 'LOW'};
+
         if (!userId) {
             $location.path('/');
         }
@@ -27,11 +29,32 @@
         }, function (response) {
             $scope.todoList = response ? response : [];
         });
+
+        $scope.openNoteDlg = function () {
+            $scope.cartDlg = $modal.open({
+                templateUrl: 'note-dialog.html',
+                controller: TodoListController,
+                scope: $scope,
+                resolve: {
+                    userId: function () {
+                        return userId;
+                    }
+                }
+            });
+        };
+
+        $scope.saveNote = function () {
+            TodoListFactory.save($scope.todo, function () {
+                alert("success");
+            }, function () {
+                alert("error");
+            });
+        };
     };
 
     UserController.$inject = ['$scope', 'UserFactory'];
     RegisterController.$inject = ['$scope', 'UserFactory'];
-    TodoListController.$inject = ['$scope', 'TodoListFactory', '$routeParams', '$location'];
+    TodoListController.$inject = ['$scope', 'TodoListFactory', '$routeParams', '$location', '$modal'];
     angular.module("myApp.controllers")
         .controller("UserController", UserController)
         .controller("RegisterController", RegisterController)

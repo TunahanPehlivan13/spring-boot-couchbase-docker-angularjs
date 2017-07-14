@@ -24,5 +24,6 @@ public class Todo {
     private Priority priority;
 
     @Field
+    @NotNull
     private String userId;
 }
