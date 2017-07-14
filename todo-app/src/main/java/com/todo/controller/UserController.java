@@ -1,17 +1,17 @@
 package com.todo.controller;
 
+import com.todo.entity.Todo;
 import com.todo.entity.User;
+import com.todo.exception.UserNotFoundException;
 import com.todo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -34,5 +34,12 @@ public class UserController {
         user.setId(UUID.randomUUID().toString());
         userRepository.save(user);
         return new ResponseEntity(user, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public User getUser(@PathVariable String userId) {
+        log.info("/getUser is requested with userId : " + userId);
+        final Optional<User> user = Optional.ofNullable(userRepository.findOne(userId));
+        return user.orElseThrow(() -> new UserNotFoundException(userId));
     }
 }
