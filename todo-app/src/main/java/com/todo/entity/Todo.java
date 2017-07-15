@@ -34,9 +34,6 @@ public class Todo {
         private Priority priority;
         private String userId;
 
-        public Builder() {
-        }
-
         public Builder note(String note) {
             this.note = note;
             return this;

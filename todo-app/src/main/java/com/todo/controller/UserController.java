@@ -1,6 +1,5 @@
 package com.todo.controller;
 
-import com.todo.entity.Todo;
 import com.todo.entity.User;
 import com.todo.exception.UserNotFoundException;
 import com.todo.repository.UserRepository;
@@ -23,13 +22,13 @@ public class UserController {
     private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> findUsers() {
+    public ResponseEntity<Iterable<User>> findUsers() {
         log.info("/users is requested");
         return ResponseEntity.ok(userRepository.findAll());
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> save(@Valid @RequestBody User user) {
+    public ResponseEntity<User> save(@Valid @RequestBody User user) {
         log.info("/save is requested with user : " + user);
         user.setId(UUID.randomUUID().toString());
         userRepository.save(user);

@@ -14,9 +14,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,12 +55,13 @@ public class UserControllerTest extends BaseControllerTest {
 
         mockMvc.perform(get("/user"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", equalTo("name1")))
-                .andExpect(jsonPath("$[0].surname", equalTo("surname1")))
-                .andExpect(jsonPath("$[0].mail", equalTo("test1@mail.com")))
-                .andExpect(jsonPath("$[1].name", equalTo("name2")))
-                .andExpect(jsonPath("$[1].surname", equalTo("surname2")))
-                .andExpect(jsonPath("$[1].mail", equalTo("test2@mail.com")));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(content().string(containsString("name1")))
+                .andExpect(content().string(containsString("surname1")))
+                .andExpect(content().string(containsString("test1@mail.com")))
+                .andExpect(content().string(containsString("name2")))
+                .andExpect(content().string(containsString("surname2")))
+                .andExpect(content().string(containsString("test2@mail.com")));
     }
 
     @Test

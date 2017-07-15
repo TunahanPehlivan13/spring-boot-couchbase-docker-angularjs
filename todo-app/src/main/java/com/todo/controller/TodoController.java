@@ -20,13 +20,13 @@ public class TodoController {
     private TodoRepository todoRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> findTodoListOfUser(@RequestParam String userId) {
+    public ResponseEntity<Iterable<Todo>> findTodoListOfUser(@RequestParam String userId) {
         log.info("/todoListOfUser is requested with userId : " + userId);
         return ResponseEntity.ok(todoRepository.findByUserId(userId));
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> save(@Valid @RequestBody Todo todo) {
+    public ResponseEntity<Todo> save(@Valid @RequestBody Todo todo) {
         log.info("/save is requested with todo : " + todo);
         todo.setId(UUID.randomUUID().toString());
         todoRepository.save(todo);

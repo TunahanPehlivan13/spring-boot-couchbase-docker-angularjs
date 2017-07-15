@@ -34,9 +34,6 @@ public class User {
         private String surname;
         private String mail;
 
-        public Builder() {
-        }
-
         public Builder name(String name) {
             this.name = name;
             return this;
