@@ -5,12 +5,13 @@
         });
     };
 
-    var RegisterController = function ($scope, UserFactory) {
+    var RegisterController = function ($scope, UserFactory, $location) {
         $scope.user = {};
 
         $scope.register = function () {
             UserFactory.save($scope.user, function () {
                 alert("success");
+                $location.path('/');
             }, function () {
                 alert("error");
             });
@@ -33,28 +34,37 @@
         $scope.openNoteDlg = function () {
             $scope.cartDlg = $modal.open({
                 templateUrl: 'note-dialog.html',
-                controller: TodoListController,
+                controller: NoteDlgController,
                 scope: $scope,
                 resolve: {
-                    userId: function () {
-                        return userId;
+                    todo: function () {
+                        return $scope.todo;
                     }
                 }
             });
         };
+    };
 
+    var NoteDlgController = function ($scope, TodoListFactory, todo) {
         $scope.saveNote = function () {
-            TodoListFactory.save($scope.todo, function () {
-                alert("success");
+            TodoListFactory.save(todo, function () {
+                $scope.todoList.push({
+                    userId: todo.userId,
+                    note: todo.note,
+                    priority: todo.priority
+                });
+                $scope.cartDlg.close();
             }, function () {
                 alert("error");
             });
         };
     };
 
+
     UserController.$inject = ['$scope', 'UserFactory'];
-    RegisterController.$inject = ['$scope', 'UserFactory'];
+    RegisterController.$inject = ['$scope', 'UserFactory', '$location'];
     TodoListController.$inject = ['$scope', 'TodoListFactory', '$routeParams', '$location', '$modal'];
+    NoteDlgController.$inject = ['$scope', 'TodoListFactory', 'todo'];
     angular.module("myApp.controllers")
         .controller("UserController", UserController)
         .controller("RegisterController", RegisterController)
