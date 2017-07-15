@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
-public class UserControllerTest extends BaseControllerTest {
+public class UserIntegrationControllerTest extends BaseIntegrationControllerTest {
 
     @Autowired
     private UserRepository userRepository;

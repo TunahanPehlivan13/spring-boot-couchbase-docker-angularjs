@@ -3,14 +3,12 @@ package com.todo.entity;
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 import com.todo.entity.enums.Priority;
-import lombok.Data;
 import org.springframework.data.couchbase.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Document
-@Data
 public class Todo {
 
     @Id
@@ -27,6 +25,38 @@ public class Todo {
     @Field
     @NotNull
     private String userId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public static class Builder {
 

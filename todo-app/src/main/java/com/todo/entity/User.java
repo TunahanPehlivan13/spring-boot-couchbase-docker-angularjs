@@ -2,7 +2,6 @@ package com.todo.entity;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
-import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.couchbase.core.mapping.Document;
 
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Document
-@Data
 @ToString
 public class User {
 
@@ -27,6 +25,38 @@ public class User {
     @Field
     @NotNull
     private String mail;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
 
     public static class Builder {
 
