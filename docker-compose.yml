@@ -11,4 +11,6 @@ services:
   todo-app:
     build: ./todo-app
     image: todo/app
+    depends_on:
+      - "couchbase"
     restart: always
