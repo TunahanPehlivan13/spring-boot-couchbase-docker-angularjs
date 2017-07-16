@@ -3,14 +3,14 @@ version: '2'
 services:
   couchbase:
     build: ./couchbase
-    image: todo/couchbase
+    image: tunahanpehlivan/couchbase
     ports:
       - "8091-8093:8091-8093"
       - "11210:11210"
 
   todo-app:
     build: ./todo-app
-    image: todo/app
+    image: tunahanpehlivan/todo-app
     depends_on:
       - "couchbase"
     restart: always
