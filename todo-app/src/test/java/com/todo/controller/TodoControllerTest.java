@@ -1,10 +1,13 @@
 package com.todo.controller;
 
 import com.todo.entity.Todo;
-import com.todo.repository.TodoRepository;
+import com.todo.entity.User;
+import com.todo.exception.UserNotFoundException;
+import com.todo.repository.UserRepository;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -16,7 +19,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,7 +30,7 @@ public class TodoControllerTest {
     private TodoController todoController;
 
     @Mock
-    private TodoRepository todoRepository;
+    private UserRepository userRepository;
 
     @Test
     public void shouldFindTodoListOfUser() {
@@ -37,12 +39,13 @@ public class TodoControllerTest {
         Todo todo2 = new Todo.Builder()
                 .build();
 
-        when(todoRepository.findByUserId("userId")).thenReturn(Arrays.asList(
-                todo1,
-                todo2
-        ));
+        User user = new User.Builder()
+                .todoList(Arrays.asList(todo1, todo2))
+                .build();
 
-        ResponseEntity<Iterable<Todo>> responseEntity = todoController.findTodoListOfUser("userId");
+        when(userRepository.findOne(user.getId())).thenReturn(user);
+
+        ResponseEntity<Iterable<Todo>> responseEntity = todoController.findTodoListOfUser(user.getId());
 
         List<Todo> todoList = Lists.newArrayList(responseEntity.getBody());
 
@@ -51,16 +54,39 @@ public class TodoControllerTest {
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
     }
 
+    @Test(expected = UserNotFoundException.class)
+    public void shouldThrowUserNoFoundExceptionWhenFindTodoListOfNonExistingUser() {
+        when(userRepository.findOne("userId")).thenReturn(null);
+
+        todoController.findTodoListOfUser("userId");
+    }
+
     @Test
-    public void shouldSaveTodo() {
+    public void shouldPutTodo() {
         Todo todo = new Todo();
 
-        ResponseEntity<Todo> responseEntity = todoController.save(todo);
+        User user = new User.Builder()
+                .build();
 
-        verify(todoRepository).save(todo);
+        when(userRepository.findOne(user.getId())).thenReturn(user);
 
-        assertNotNull(todo.getId());
-        assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.CREATED));
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+
+        ResponseEntity<Todo> responseEntity = todoController.put(todo, user.getId());
+
+        verify(userRepository).save(captor.capture());
+
+        assertThat(captor.getValue().getTodoList(), hasItem(todo));
         assertThat(responseEntity.getBody(), equalTo(todo));
+        assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.CREATED));
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void shouldThrowUserNoFoundExceptionWhenPutTodoOfNonExistingUser() {
+        Todo todo = new Todo();
+
+        when(userRepository.findOne("userId")).thenReturn(null);
+
+        todoController.put(todo, "userId");
     }
 }

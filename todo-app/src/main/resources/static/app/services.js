@@ -6,8 +6,10 @@
     };
 
     var TodoListFactory = function ($resource) {
-        return $resource('/todo/:id', {
-            id: '@id'
+        return $resource('/todo/:userId', {userId: '@userId'}, {
+            update: {
+                method: 'PUT'
+            }
         });
     };
 

@@ -80,59 +80,25 @@ public class UserIntegrationControllerTest extends BaseIntegrationControllerTest
     }
 
     @Test
-    public void shouldReturnBadRequestWhenAddingNewTodoIfMailIsNull() throws Exception {
+    public void shouldReturnBadRequestWhenAddingNewUserIfMailIsEmpty() throws Exception {
         User user = new User.Builder()
                 .name("name")
                 .surname("surname")
                 .build();
 
-        mockMvc.perform(post("/todo").content(this.json(user)).contentType(contentType))
+        mockMvc.perform(post("/user").content(this.json(user)).contentType(contentType))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenAddingNewTodoIfNameIsNull() throws Exception {
+    public void shouldReturnBadRequestWhenAddingNewTodoIfNameIsEmpty() throws Exception {
         User user = new User.Builder()
                 .mail("test@mail.com")
                 .surname("surname")
                 .build();
 
-        mockMvc.perform(post("/todo").content(this.json(user)).contentType(contentType))
+        mockMvc.perform(post("/user").content(this.json(user)).contentType(contentType))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldReturnBadRequestWhenAddingNewTodoIfSurnameIsNull() throws Exception {
-        User user = new User.Builder()
-                .mail("test@mail.com")
-                .name("name")
-                .build();
-
-        mockMvc.perform(post("/todo").content(this.json(user)).contentType(contentType))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void shouldReturnOkWhenGettingExistingUser() throws Exception {
-        User user = new User.Builder()
-                .mail("test@mail.com")
-                .name("name")
-                .surname("surname")
-                .build();
-
-        userRepository.save(user);
-
-        mockMvc.perform(get("/user/" + user.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo("name")))
-                .andExpect(jsonPath("$.surname", equalTo("surname")))
-                .andExpect(jsonPath("$.mail", equalTo("test@mail.com")));
-    }
-
-    @Test
-    public void shouldReturnNotFoundWhenGettingNonExistentUser() throws Exception {
-        mockMvc.perform(get("/user/userId"))
-                .andExpect(status().isNotFound());
     }
 
     @After

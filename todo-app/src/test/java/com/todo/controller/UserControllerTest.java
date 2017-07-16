@@ -1,8 +1,6 @@
 package com.todo.controller;
 
-import com.todo.entity.Todo;
 import com.todo.entity.User;
-import com.todo.exception.UserNotFoundException;
 import com.todo.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +14,8 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,24 +59,5 @@ public class UserControllerTest {
         assertNotNull(user.getId());
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.CREATED));
         assertThat(responseEntity.getBody(), equalTo(user));
-    }
-
-    @Test
-    public void shouldGetUserByUserIdWhenHasUser() {
-        User user = new User.Builder()
-                .build();
-
-        when(userRepository.findOne(user.getId())).thenReturn(user);
-
-        User returnedUser = userController.getUser(user.getId());
-
-        assertThat(returnedUser, equalTo(user));
-    }
-
-    @Test(expected = UserNotFoundException.class)
-    public void shouldGetUserByUserIdWhenHasNoUser() {
-        when(userRepository.findOne("userId")).thenReturn(null);
-
-        userController.getUser("userId");
     }
 }

@@ -1,11 +1,14 @@
 package com.todo.entity;
 
+import com.couchbase.client.deps.com.fasterxml.jackson.annotation.JsonIgnore;
 import com.couchbase.client.java.repository.annotation.Field;
 import com.couchbase.client.java.repository.annotation.Id;
 import lombok.ToString;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.couchbase.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Document
@@ -16,15 +19,19 @@ public class User {
     private String id;
 
     @Field
-    @NotNull
+    @NotEmpty
     private String name;
 
     @Field
     private String surname;
 
     @Field
-    @NotNull
+    @NotEmpty
     private String mail;
+
+    @Field
+    @JsonIgnore
+    private List<Todo> todoList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -58,11 +65,20 @@ public class User {
         this.mail = mail;
     }
 
+    public List<Todo> getTodoList() {
+        return todoList;
+    }
+
+    public void setTodoList(List<Todo> todoList) {
+        this.todoList = todoList;
+    }
+
     public static class Builder {
 
         private String name;
         private String surname;
         private String mail;
+        private List<Todo> todoList = new ArrayList<>();
 
         public Builder name(String name) {
             this.name = name;
@@ -79,12 +95,18 @@ public class User {
             return this;
         }
 
+        public Builder todoList(List todoList) {
+            this.todoList = todoList;
+            return this;
+        }
+
         public User build() {
             User user = new User();
             user.setId(UUID.randomUUID().toString());
             user.setName(name);
             user.setSurname(surname);
             user.setMail(mail);
+            user.setTodoList(todoList);
             return user;
         }
     }

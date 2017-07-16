@@ -13,12 +13,9 @@ public class TodoBuilderTest {
         Todo todo = new Todo.Builder()
                 .note("note")
                 .priority(Priority.HIGH)
-                .userId("userId")
                 .build();
 
-        assertNotNull(todo.getId());
         assertEquals(todo.getNote(), "note");
         assertThat(todo.getPriority(), equalTo(Priority.HIGH));
-        assertEquals(todo.getUserId(), "userId");
     }
 }

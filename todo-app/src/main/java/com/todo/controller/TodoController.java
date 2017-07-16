@@ -1,7 +1,9 @@
 package com.todo.controller;
 
 import com.todo.entity.Todo;
-import com.todo.repository.TodoRepository;
+import com.todo.entity.User;
+import com.todo.exception.UserNotFoundException;
+import com.todo.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.UUID;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/todo")
@@ -17,19 +19,23 @@ import java.util.UUID;
 public class TodoController {
 
     @Autowired
-    private TodoRepository todoRepository;
+    private UserRepository userRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Todo>> findTodoListOfUser(@RequestParam String userId) {
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<Iterable<Todo>> findTodoListOfUser(@PathVariable(required = true) String userId) {
         log.info("/todoListOfUser is requested with userId : " + userId);
-        return ResponseEntity.ok(todoRepository.findByUserId(userId));
+        final Optional<User> optional = Optional.ofNullable(userRepository.findOne(userId));
+        User user = optional.orElseThrow(() -> new UserNotFoundException(userId));
+        return ResponseEntity.ok(user.getTodoList());
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Todo> save(@Valid @RequestBody Todo todo) {
-        log.info("/save is requested with todo : " + todo);
-        todo.setId(UUID.randomUUID().toString());
-        todoRepository.save(todo);
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    public ResponseEntity<Todo> put(@Valid @RequestBody Todo todo, @PathVariable(required = true) String userId) {
+        log.info("/save is requested with todo : " + todo + ", userId : " + userId);
+        final Optional<User> optional = Optional.ofNullable(userRepository.findOne(userId));
+        User user = optional.orElseThrow(() -> new UserNotFoundException(userId));
+        user.getTodoList().add(todo);
+        userRepository.save(user);
         return new ResponseEntity(todo, HttpStatus.CREATED);
     }
 }
